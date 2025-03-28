@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LIFF Stripe Checkout</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.min.css"
+    />
+  </head>
+  <body>
+    <form
+      class="w-75 mx-auto"
+      method="post"
+      action="https://script.google.com/macros/s/AKfycbyycGVTeU3Fs7G_E2B7IqJDaiG72wa50cFn2gZVlD5ZVMebua7i568Qf7ZruyrkBIferg/exec"
+      target="_blank"
+      id="liffForm"
+    >
+      <!-- Dynamically populated fields will be appended here -->
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script>
+      // Initialize LIFF app
+      liff
+        .init({
+          liffId: "2007108080-XQE6YNRM",
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      // When LIFF is ready, check if the user is logged in
+      liff.ready.then(() => {
+        if (!liff.isLoggedIn()) {
+          liff.login();
+        }
+
+        // After login, fetch user profile
+        liff
+          .getProfile()
+          .then((profile) => {
+            const userId = profile.userId; // Get user ID
+
+            // Dynamically append user ID and submit button to form
+            $("#liffForm").append(
+              `<input type="hidden" name="userId" value="${userId}" />`
+            );
+            $("#liffForm").append(
+              `<input type="submit" class="mt-4 btn btn-primary" value="送信" />`
+            );
+          })
+          .catch((err) => {
+            console.log("Error getting profile: ", err);
+          });
+      });
+    </script>
+  </body>
+</html>
